@@ -41,16 +41,28 @@ Graph.prototype.removeNode = function(node) {
   var deleting = function(array) {
     for (let i = 0; i < array.length; i++) {
       if (array[i].name === node) {
+        /* get keys from obj.links into an array
+        iterate thru storage for matching links[node] in other obj
+          delete links[node] of other obj
+        */
+        let contacts = array[i].links;
+        // for (let key in contacts) {
+        //   let contact = contacts[key];
+        //   delete contact.links[node];
+        // }
         delete array[i];
       }
     }
     if (array === undefined) {
       return [];
+    } else {
+      return array;
     }
+
   };
 
-  var mod = deleting(copyStorage);
-  this.storage = mod;
+  var adjusted = deleting(copyStorage);
+  this.storage = adjusted;
 };
 
 // Returns a boolean indicating whether two specified nodes are connected.  Pass in the values contained in each of the two nodes.
@@ -60,6 +72,9 @@ Graph.prototype.hasEdge = function(fromNode, toNode) {
 
   //find the reference for the nodes
   for (let i = 0; i < this.storage.length; i++) {
+  //     if (this.storage[i] === undefined) {
+  //       return false
+  //     };
     if (this.storage[i].name === fromNode) {
       foundFrom = this.storage[i];
     } else if (this.storage[i].name === toNode) {
@@ -83,8 +98,8 @@ Graph.prototype.addEdge = function(fromNode, toNode) {
       foundTo = this.storage[i];
     }
   }
-  foundFrom.links[fromNode] = foundTo;
-  foundTo.links[toNode] = foundFrom;
+  foundFrom.links[toNode] = foundTo;
+  foundTo.links[fromNode] = foundFrom;
 };
 
 // Remove an edge between any two specified (by value) nodes.
